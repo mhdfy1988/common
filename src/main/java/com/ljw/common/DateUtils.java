@@ -283,42 +283,192 @@ public class DateUtils {
 		return ca.get(Calendar.DAY_OF_MONTH);
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(DateUtils.getCurrentDate());
-		System.out.println(DateUtils.getCurrentDate("yyyy_MM_dd"));
-		
-		System.out.println(DateUtils.getCurrentTime());
-		System.out.println(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
-		
-		System.out.println(DateUtils.getDateStr(new Date()));
-		System.out.println(DateUtils.getDateStr(new Date().getTime()));
-		
-		System.out.println(DateUtils.getDateStr(new Date(),"yyyyMMddHHmmss"));
-		System.out.println(DateUtils.getDateStr(new Date().getTime(),"yyyyMMddHHmmss"));
-		
-		System.out.println(DateUtils.getDate("2020-04-23 11:11:11"));
-		System.out.println(DateUtils.getDate("20200423111111","yyyyMMddHHmmss"));
-		System.out.println(DateUtils.getDate(new Date().getTime()));
-		
-		System.out.println(DateUtils.getTimestamp(new Date()));
-		System.out.println(DateUtils.getTimestamp("2020-04-23 11:11:11"));
-		System.out.println(DateUtils.getTimestamp("20200423111111","yyyyMMddHHmmss"));
-
-		System.out.println(DateUtils.getYear(new Date()));
-		System.out.println(DateUtils.getYear("2021-04-23 11:11:11"));
-		System.out.println(DateUtils.getYear("20190423111111","yyyyMMddHHmmss"));
-		
-		System.out.println(DateUtils.getMonth(new Date()));
-		System.out.println(DateUtils.getMonth("2021-04-23 11:11:11"));
-		System.out.println(DateUtils.getMonth("20190423111111","yyyyMMddHHmmss"));
-		
-		System.out.println(DateUtils.getDay(new Date()));
-		System.out.println(DateUtils.getDay("2021-04-29 11:11:11"));
-		System.out.println(DateUtils.getDay("20190421111111","yyyyMMddHHmmss"));
-		
-		
-		
+	/**
+	 * 获取指定时间间隔N年的时间
+	 * @param date 时间
+	 * @param num 间隔年
+	 * @return
+	 */
+	public static Date getDateByIntervalYear(Date date,int num) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(date);
+		ca.add(Calendar.YEAR, num);
+		return ca.getTime();
+	} 
+	
+	/**
+	 * 获取指定时间间隔N年的时间
+	 * @param dateStr 时间字符串 （默认格式：yyyy-MM-dd HH:mm:ss）
+	 * @param num 间隔年
+	 * @return
+	 */
+	public static Date getDateByIntervalYear(String dateStr,int num) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(dateStr));
+		ca.add(Calendar.YEAR, num);
+		return ca.getTime();
+	} 
+	
+	/**
+	 * 获取指定时间间隔N年的时间
+	 * @param dateStr 时间字符串
+	 * @param num	间隔年
+	 * @param pattern 时间格式
+	 * @return
+	 */
+	public static Date getDateByIntervalYear(String dateStr,int num,String pattern) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(dateStr,pattern));
+		ca.add(Calendar.YEAR, num);
+		return ca.getTime();
+	} 
+	
+	/**
+	 * 获取指定时间间隔N月的时间
+	 * @param date 时间
+	 * @param num 间隔月
+	 * @return
+	 */
+	public static Date getDateByIntervalMonth(Date date,int num) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(date);
+		ca.add(Calendar.MONTH, num);
+		return ca.getTime();
+	} 
+	
+	/**
+	 * 获取指定时间间隔N月的时间
+	 * @param dateStr 时间字符串 （默认格式：yyyy-MM-dd HH:mm:ss）
+	 * @param num 间隔月
+	 * @return
+	 */
+	public static Date getDateByIntervalMonth(String dateStr,int num) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(dateStr));
+		ca.add(Calendar.MONTH, num);
+		return ca.getTime();
+	} 
+	
+	/**
+	 * 获取指定时间间隔N月的时间
+	 * @param dateStr 时间字符串
+	 * @param num	间隔月
+	 * @param pattern 时间格式
+	 * @return
+	 */
+	public static Date getDateByIntervalMonth(String dateStr,int num,String pattern) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(dateStr,pattern));
+		ca.add(Calendar.MONTH, num);
+		return ca.getTime();
+	} 
+	
+	/**
+	 * 获取指定时间间隔N天的时间
+	 * @param date 时间
+	 * @param num 间隔天
+	 * @return
+	 */
+	public static Date getDateByIntervalDay(Date date,int num) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(date);
+		ca.add(Calendar.DATE, num);
+		return ca.getTime();
+	} 
+	
+	/**
+	 * 获取指定时间间隔N天的时间
+	 * @param dateStr 时间字符串 （默认格式：yyyy-MM-dd HH:mm:ss）
+	 * @param num 间隔天
+	 * @return
+	 */
+	public static Date getDateByIntervalDay(String dateStr,int num) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(dateStr));
+		ca.add(Calendar.DATE, num);
+		return ca.getTime();
+	} 
+	
+	/**
+	 * 获取指定时间间隔N天的时间
+	 * @param dateStr 时间字符串
+	 * @param num	间隔天
+	 * @param pattern 时间格式
+	 * @return
+	 */
+	public static Date getDateByIntervalDay(String dateStr,int num,String pattern) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(dateStr,pattern));
+		ca.add(Calendar.DATE, num);
+		return ca.getTime();
+	} 
+	
+	/**
+	 * 将时间字符串以指定格式输出
+	 * @param dataStr 时间字符串
+	 * @param oldPattern 旧时间格式
+	 * @param newPattern 新时间格式
+	 * @return
+	 */
+	public static String getDateStr(String dataStr,String oldPattern,String newPattern) {
+		try {
+			SimpleDateFormat sdf1 = new SimpleDateFormat(oldPattern);
+			Date d = sdf1.parse(dataStr);
+			SimpleDateFormat sdf2 = new SimpleDateFormat(newPattern);
+			return sdf2.format(d);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
+	
+//	public static void main(String[] args) {
+//		System.out.println(DateUtils.getCurrentDate());
+//		System.out.println(DateUtils.getCurrentDate("yyyy_MM_dd"));
+//		
+//		System.out.println(DateUtils.getCurrentTime());
+//		System.out.println(DateUtils.getCurrentTime("yyyyMMddHHmmss"));
+//		
+//		System.out.println(DateUtils.getDateStr(new Date()));
+//		System.out.println(DateUtils.getDateStr(new Date().getTime()));
+//		
+//		System.out.println(DateUtils.getDateStr(new Date(),"yyyyMMddHHmmss"));
+//		System.out.println(DateUtils.getDateStr(new Date().getTime(),"yyyyMMddHHmmss"));
+//		
+//		System.out.println(DateUtils.getDate("2020-04-23 11:11:11"));
+//		System.out.println(DateUtils.getDate("20200423111111","yyyyMMddHHmmss"));
+//		System.out.println(DateUtils.getDate(new Date().getTime()));
+//		
+//		System.out.println(DateUtils.getTimestamp(new Date()));
+//		System.out.println(DateUtils.getTimestamp("2020-04-23 11:11:11"));
+//		System.out.println(DateUtils.getTimestamp("20200423111111","yyyyMMddHHmmss"));
+//
+//		System.out.println(DateUtils.getYear(new Date()));
+//		System.out.println(DateUtils.getYear("2021-04-23 11:11:11"));
+//		System.out.println(DateUtils.getYear("20190423111111","yyyyMMddHHmmss"));
+//		
+//		System.out.println(DateUtils.getMonth(new Date()));
+//		System.out.println(DateUtils.getMonth("2021-04-23 11:11:11"));
+//		System.out.println(DateUtils.getMonth("20190423111111","yyyyMMddHHmmss"));
+//		
+//		System.out.println(DateUtils.getDay(new Date()));
+//		System.out.println(DateUtils.getDay("2021-04-29 11:11:11"));
+//		System.out.println(DateUtils.getDay("20190421111111","yyyyMMddHHmmss"));
+//		
+//		System.out.println(DateUtils.getDateByIntervalYear(new Date(), 1));
+//		System.out.println(DateUtils.getDateByIntervalYear("2015-11-11 12:11:11", 5));
+//		System.out.println(DateUtils.getDateByIntervalYear("20151111121111", -1,"yyyyMMddHHmmss"));
+//		
+//		System.out.println(DateUtils.getDateByIntervalMonth(new Date(), 1));
+//		System.out.println(DateUtils.getDateByIntervalMonth("2015-11-11 12:11:11", 5));
+//		System.out.println(DateUtils.getDateByIntervalMonth("20151111121111", -1,"yyyyMMddHHmmss"));
+//		
+//		System.out.println(DateUtils.getDateByIntervalDay(new Date(), 1));
+//		System.out.println(DateUtils.getDateByIntervalDay("2015-11-11 12:11:11", 5));
+//		System.out.println(DateUtils.getDateByIntervalDay("20151111121111", -1,"yyyyMMddHHmmss"));
+//		
+//		System.out.println(DateUtils.getDateStr("2020-01-02 11:22:33", "yyyy-MM-dd HH:mm:ss", "yyyyMMdd"));
+//	}
 	
 
 }
