@@ -8,6 +8,11 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 时间操作工具类
+ * @author luojw
+ *
+ */
 public class DateUtils {
 	
 	private static final String YYYYMMDD = "yyyy-MM-dd";

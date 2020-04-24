@@ -2,6 +2,11 @@ package com.ljw.common;
 
 import java.util.UUID;
 
+/**
+ * UUID工具类
+ * @author Administrator
+ *
+ */
 public class UuidUtils {
 
 	/**
