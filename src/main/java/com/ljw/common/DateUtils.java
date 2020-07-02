@@ -427,6 +427,12 @@ public class DateUtils {
 		return null;
 	}
 	
+	
+	public static void main(String[] args) {
+		System.out.println(getDateStr(getDateByIntervalMonth(new Date(), -2),"yyyyMMdd"));
+		
+	}
+	
 //	public static void main(String[] args) {
 //		System.out.println(DateUtils.getCurrentDate());
 //		System.out.println(DateUtils.getCurrentDate("yyyy_MM_dd"));
