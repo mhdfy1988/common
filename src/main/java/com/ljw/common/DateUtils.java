@@ -253,6 +253,39 @@ public class DateUtils {
 		return ca.get(Calendar.MONTH)+1;
 	}
 	
+	/**
+	 * 获取星期几
+	 * @param date 时间
+	 * @return
+	 */
+	public static int getDayInWeek(Date date) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(date);
+		return ca.get(Calendar.DAY_OF_WEEK) - 1;
+	}
+	
+	/**
+	 *获取星期几
+	 * @param date 时间字符串 （默认格式：yyyy-MM-dd HH:mm:ss）
+	 * @return
+	 */
+	public static int getDayInWeek(String date) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(date));
+		return ca.get(Calendar.DAY_OF_WEEK) - 1;
+	}
+	
+	/**
+	 * 获取星期几
+	 * @param date 时间字符串
+	 * @param pattern 时间格式
+	 * @return
+	 */
+	public static int getDayInWeek(String date,String pattern) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(date,pattern));
+		return ca.get(Calendar.DAY_OF_WEEK) - 1;
+	}
 	
 	/**
 	 * 获取天
@@ -286,6 +319,41 @@ public class DateUtils {
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(getDate(date,pattern));
 		return ca.get(Calendar.DAY_OF_MONTH);
+	}
+	
+	
+	/**
+	 * 获取小时
+	 * @param date 时间
+	 * @return
+	 */
+	public static int getHour(Date date) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(date);
+		return ca.get(Calendar.HOUR_OF_DAY);
+	}
+	
+	/**
+	 * 获取小时
+	 * @param date 时间字符串 （默认格式：yyyy-MM-dd HH:mm:ss）
+	 * @return
+	 */
+	public static int getHour(String date) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(date));
+		return ca.get(Calendar.HOUR_OF_DAY);
+	}
+	
+	
+	/**
+	 * 获取小时
+	 * @param date 时间字符串 
+	 * @return
+	 */
+	public static int getHour(String date ,String pattern) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(date,pattern));
+		return ca.get(Calendar.HOUR_OF_DAY);
 	}
 	
 	/**
@@ -408,6 +476,48 @@ public class DateUtils {
 		return ca.getTime();
 	} 
 	
+	
+	/**
+	 * 获取指定时间间隔N小时的时间
+	 * @param date 时间
+	 * @param num 间隔小时
+	 * @return
+	 */
+	public static Date getDateByIntervalHour(Date date,int num) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(date);
+		ca.add(Calendar.HOUR_OF_DAY, num);
+		return ca.getTime();
+	} 
+	
+	/**
+	 * 获取指定时间间隔N小时的时间
+	 * @param dateStr 时间字符串 （默认格式：yyyy-MM-dd HH:mm:ss）
+	 * @param num 间隔小时
+	 * @return
+	 */
+	public static Date getDateByIntervalHour(String dateStr,int num) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(dateStr));
+		ca.add(Calendar.HOUR_OF_DAY, num);
+		return ca.getTime();
+	}
+	
+	/**
+	 * 获取指定时间间隔N小时的时间
+	 * @param dateStr 时间字符串
+	 * @param num	间隔小时
+	 * @param pattern 时间格式
+	 * @return
+	 */
+	public static Date getDateByIntervalHour(String dateStr,int num,String pattern) {
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(getDate(dateStr,pattern));
+		ca.add(Calendar.HOUR_OF_DAY, num);
+		return ca.getTime();
+	} 
+	
+	
 	/**
 	 * 将时间字符串以指定格式输出
 	 * @param dataStr 时间字符串
@@ -429,7 +539,9 @@ public class DateUtils {
 	
 	
 	public static void main(String[] args) {
-		System.out.println(getDateStr(getDateByIntervalMonth(new Date(), -2),"yyyyMMdd"));
+//		System.out.println(getDateStr(getDateByIntervalMonth(new Date(), -2),"yyyyMMdd"));
+//		System.out.println(DateUtils.getCurrentDate("yyyyMM"));
+		System.out.println(DateUtils.getDateByIntervalHour(new Date(), -18));
 		
 	}
 	

@@ -1,9 +1,7 @@
 package com.ljw.common;
 
-import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,9 +12,13 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -37,14 +39,14 @@ public class HttpUtils {
 	 */
 	public static String doGet(String url) {
 		String result = null;
-		
+		CloseableHttpResponse response = null;
 		//创建默认配置HTTPCLIENT实例
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		//创建httpGet请求实例
 		HttpGet httpGet = new HttpGet(url);
 		try {
 			//response
-			HttpResponse response =   httpClient.execute(httpGet);
+			response =   httpClient.execute(httpGet);
 			if(response != null) {
 				HttpEntity resEntity = response.getEntity();
 				if(resEntity != null) {
@@ -58,6 +60,7 @@ public class HttpUtils {
 			e.printStackTrace();
 		}finally {
 			try {
+				response.close();
 				httpClient.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -67,17 +70,74 @@ public class HttpUtils {
 	}
 	
 	/**
+	 * get请求
+	 * @param url
+	 * @return
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public static String doGetThrowException(String url) throws ClientProtocolException, IOException {
+		String result = null;
+		CloseableHttpResponse response = null;
+		//创建默认配置HTTPCLIENT实例
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		//创建httpGet请求实例
+		HttpGet httpGet = new HttpGet(url);
+		//response
+		response =   httpClient.execute(httpGet);
+		if(response != null) {
+			HttpEntity resEntity = response.getEntity();
+			if(resEntity != null) {
+				//结果
+				result = EntityUtils.toString(resEntity,"UTF-8");
+			}
+		}
+			response.close();
+			httpClient.close();
+		return result;
+	}
+	
+	
+	/**
+	 * get请求
+	 * @param url
+	 * @return
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public static HttpResponse doGetWithRespThrowException(String url) throws ClientProtocolException, IOException {
+		CloseableHttpResponse response = null;
+		//创建默认配置HTTPCLIENT实例
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		//创建httpGet请求实例
+		HttpGet httpGet = new HttpGet(url);
+		
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(10000) //连接超时时间
+                .setConnectionRequestTimeout(10000) //从连接池中取的连接的最长时间
+                .setSocketTimeout(10000) //数据传输的超时时间
+                .build();
+		httpGet.setConfig(config);
+		
+		//response
+		response =   httpClient.execute(httpGet);
+		response.close();
+		httpClient.close();
+		return response;
+	}
+	
+	/**
 	 * 不带参数的post请求
 	 * @param url
 	 * @return
 	 */
 	public static String doPost(String url) {
 		String result = null;
+		CloseableHttpResponse response = null;
 		//创建默认配置HTTPCLIENT实例
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(url);
 		try {
-			HttpResponse response = httpClient.execute(httpPost);
+			response = httpClient.execute(httpPost);
 			if(response != null) {
 				HttpEntity resEntity = response.getEntity();
 				if(resEntity != null) {
@@ -91,6 +151,7 @@ public class HttpUtils {
 			e.printStackTrace();
 		}finally {
 			try {
+				response.close();
 				httpClient.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -108,7 +169,7 @@ public class HttpUtils {
 	 */
 	public static String doPost(String url,Map<String,String> paramMap) {
 		String result = null;
-		
+		CloseableHttpResponse response = null;
 		//创建默认配置HTTPCLIENT实例
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(url);
@@ -124,7 +185,7 @@ public class HttpUtils {
 				UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params,Consts.UTF_8);
 				httpPost.setEntity(entity);
 			}
-			HttpResponse response = httpClient.execute(httpPost);
+			response = httpClient.execute(httpPost);
 			if(response != null) {
 				HttpEntity resEntity = response.getEntity();
 				if(resEntity != null) {
@@ -138,6 +199,7 @@ public class HttpUtils {
 			e.printStackTrace();
 		}finally {
 			try {
+				response.close();
 				httpClient.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -155,7 +217,7 @@ public class HttpUtils {
 	 */
 	public static String doPost(String url,String jsonStr) {
 		String result = null;
-		
+		CloseableHttpResponse response = null;
 		//创建默认配置HTTPCLIENT实例
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(url);
@@ -165,9 +227,15 @@ public class HttpUtils {
 			entity.setContentType("application/json;charset=UTF-8");
 			httpPost.setEntity(entity);
 		}
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(10000) //连接超时时间
+                .setConnectionRequestTimeout(10000) //从连接池中取的连接的最长时间
+                .setSocketTimeout(10000) //数据传输的超时时间
+                .build();
+		
+		httpPost.setConfig(config);
 		
 		try {
-			HttpResponse response = httpClient.execute(httpPost);
+			response = httpClient.execute(httpPost);
 			if(response != null) {
 				HttpEntity resEntity = response.getEntity();
 				if(resEntity != null) {
@@ -181,6 +249,7 @@ public class HttpUtils {
 			e.printStackTrace();
 		}finally {
 			try {
+				response.close();
 				httpClient.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -188,6 +257,204 @@ public class HttpUtils {
 		}
 
 		return result;
+	}
+	
+	
+	/**
+	 * 带json字符串参数的post请求
+	 * @param url
+	 * @param jsonStr
+	 * @return
+	 * @throws IOException,HttpHostConnectException 
+	 * @throws ClientProtocolException 
+	 */
+	public static String doPostThrowException(String url,String jsonStr) throws ClientProtocolException, IOException {
+		String result = null;
+		CloseableHttpResponse response = null;
+		//创建默认配置HTTPCLIENT实例
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpPost httpPost = new HttpPost(url);
+		
+		if(!StringUtils.isEmpty(jsonStr)) {
+			StringEntity entity = new StringEntity(jsonStr,Consts.UTF_8);
+			entity.setContentType("application/json;charset=UTF-8");
+			httpPost.setEntity(entity);
+		}
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(10000) //连接超时时间
+                .setConnectionRequestTimeout(10000) //从连接池中取的连接的最长时间
+                .setSocketTimeout(10000) //数据传输的超时时间
+                .build();
+		
+		httpPost.setConfig(config);
+		response = httpClient.execute(httpPost);
+		if(response != null) {
+			HttpEntity resEntity = response.getEntity();
+			if(resEntity != null) {
+				//结果
+				result = EntityUtils.toString(resEntity,"UTF-8");
+			}
+		}
+		response.close();
+		httpClient.close();
+		return result;
+	}
+	
+	/**
+	 * 带json字符串参数的post请求
+	 * @param url
+	 * @param jsonStr
+	 * @return
+	 * @throws IOException,HttpHostConnectException 
+	 * @throws ClientProtocolException 
+	 */
+	public static HttpResponse doPostWithRespThrowException(String url,String jsonStr) throws ClientProtocolException, IOException {
+		CloseableHttpResponse response = null;
+		//创建默认配置HTTPCLIENT实例
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpPost httpPost = new HttpPost(url);
+		
+		if(!StringUtils.isEmpty(jsonStr)) {
+			StringEntity entity = new StringEntity(jsonStr,Consts.UTF_8);
+			entity.setContentType("application/json;charset=UTF-8");
+			httpPost.setEntity(entity);
+		}
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(10000) //连接超时时间
+                .setConnectionRequestTimeout(10000) //从连接池中取的连接的最长时间
+                .setSocketTimeout(10000) //数据传输的超时时间
+                .build();
+		
+		httpPost.setConfig(config);
+		response = httpClient.execute(httpPost);
+		response.close();
+		httpClient.close();
+		return response;
+	}
+	
+	
+	/**
+	 * 带json字符串参数的put请求
+	 * @param url
+	 * @param jsonStr
+	 * @return
+	 */
+	public static String doPut(String url,String jsonStr) {
+		String result = null;
+		CloseableHttpResponse response = null;
+		//创建默认配置HTTPCLIENT实例
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpPut httpput = new HttpPut(url);
+		
+		if(!StringUtils.isEmpty(jsonStr)) {
+			StringEntity entity = new StringEntity(jsonStr,Consts.UTF_8);
+			entity.setContentType("application/json;charset=UTF-8");
+			httpput.setEntity(entity);
+		}
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(10000) //连接超时时间
+                .setConnectionRequestTimeout(10000) //从连接池中取的连接的最长时间
+                .setSocketTimeout(10000) //数据传输的超时时间
+                .build();
+		
+		httpput.setConfig(config);
+		
+		try {
+			response = httpClient.execute(httpput);
+			if(response != null) {
+				HttpEntity resEntity = response.getEntity();
+				if(resEntity != null) {
+					//结果
+					result = EntityUtils.toString(resEntity,"UTF-8");
+				}
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				response.close();
+				httpClient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return result;
+	}
+	
+	
+	/**
+	 * 带json字符串参数的put请求
+	 * @param url
+	 * @param jsonStr
+	 * @return
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public static String doPutThrowException(String url,String jsonStr) throws ClientProtocolException, IOException {
+		String result = null;
+		CloseableHttpResponse response = null;
+		//创建默认配置HTTPCLIENT实例
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpPut httpput = new HttpPut(url);
+		
+		if(!StringUtils.isEmpty(jsonStr)) {
+			StringEntity entity = new StringEntity(jsonStr,Consts.UTF_8);
+			entity.setContentType("application/json;charset=UTF-8");
+			httpput.setEntity(entity);
+		}
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(10000) //连接超时时间
+                .setConnectionRequestTimeout(10000) //从连接池中取的连接的最长时间
+                .setSocketTimeout(10000) //数据传输的超时时间
+                .build();
+		
+		httpput.setConfig(config);
+		
+		response = httpClient.execute(httpput);
+		if(response != null) {
+			HttpEntity resEntity = response.getEntity();
+			if(resEntity != null) {
+				//结果
+				result = EntityUtils.toString(resEntity,"UTF-8");
+			}
+		}
+		response.close();
+		httpClient.close();
+
+		return result;
+	}
+	
+	/**
+	 * 带json字符串参数的put请求
+	 * @param url
+	 * @param jsonStr
+	 * @return
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 */
+	public static HttpResponse doPutWithRespThrowException(String url,String jsonStr) throws ClientProtocolException, IOException {
+		CloseableHttpResponse response = null;
+		//创建默认配置HTTPCLIENT实例
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpPut httpput = new HttpPut(url);
+		
+		if(!StringUtils.isEmpty(jsonStr)) {
+			StringEntity entity = new StringEntity(jsonStr,Consts.UTF_8);
+			entity.setContentType("application/json;charset=UTF-8");
+			httpput.setEntity(entity);
+		}
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(10000) //连接超时时间
+                .setConnectionRequestTimeout(10000) //从连接池中取的连接的最长时间
+                .setSocketTimeout(10000) //数据传输的超时时间
+                .build();
+		
+		httpput.setConfig(config);
+		
+		response = httpClient.execute(httpput);
+		
+		response.close();
+		httpClient.close();
+
+		return response;
 	}
 	
 	
